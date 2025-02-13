@@ -4,8 +4,12 @@ import { AppService } from './app.service';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
+  @Get()
+  healthCheck(): boolean {
+    return true;
+  }
 
-  @Get("getHello")
+  @Get('getHello')
   getHello(): string {
     return this.appService.getHello();
   }

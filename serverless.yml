@@ -1,9 +1,14 @@
 service: nestjs-app
 
+
+plugins:
+  - serverless-dotenv-plugin
+  
 provider:
   name: aws
   runtime: nodejs16.x
   region: ap-south-1
+  stage:  ${env:STAGE}
 
 functions:
   api:
@@ -11,7 +16,10 @@ functions:
     events:
       - http:
           path: /
-          method: any
+          method: GET
+  getHello:
+    handler: dist/main.handler
+    events:
       - http:
           path: /getHello
           method: GET

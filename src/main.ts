@@ -4,12 +4,14 @@ import * as awsServerlessExpress from 'aws-serverless-express';
 import { Handler, APIGatewayProxyEvent, Context } from 'aws-lambda';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as express from 'express';
+import { config } from 'dotenv';
 
 const server = express();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
   await app.init();
+  config();
   return awsServerlessExpress.createServer(server);
 }
 
