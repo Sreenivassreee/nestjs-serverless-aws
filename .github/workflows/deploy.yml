@@ -43,7 +43,9 @@ jobs:
         run: |
           rm -rf dist
           npm run build
-
+      - name: Debug stack name
+        run: |
+          echo "Stack name: nestjs-app-${ENVIRONMENT}"
       - name: Package for AWS Lambda
         run: |
           echo $STAGE
