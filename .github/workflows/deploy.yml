@@ -78,12 +78,16 @@ jobs:
 
       - name: List .serverless directory
         run: ls -la 
+
+      - name: Move to serverless
+        run: |
+          mv .serverless serverless 
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
             name: deploy-package
-            path: ${{ github.workspace }}/serverless/
+            path: ${{ github.workspace }}/.serverless/
             if-no-files-found: error
             include-hidden-files: true
 
