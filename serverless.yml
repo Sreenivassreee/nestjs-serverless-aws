@@ -9,7 +9,7 @@ provider:
   runtime: nodejs16.x
   region: ap-south-1
   stage: ${env:ENVIRONMENT, 'dev'} 
-  stackName: nestjs-app-${env:ENVIRONMENT}
+  stackName: nestjs-app-prod
 
 functions:
   api:
