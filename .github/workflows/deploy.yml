@@ -83,7 +83,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
             name: deploy-package
-            path: ${{ github.workspace }}/.serverless
+            path: ${{ github.workspace }}/.env
             if-no-files-found: error
 
 
@@ -98,7 +98,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: deploy-package
-          path: .env
+          path: .serverless/
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
