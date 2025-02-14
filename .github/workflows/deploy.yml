@@ -17,10 +17,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20.x # Use a stable LTS version
+          node-version: 20.x
 
       - name: Install dependencies
         run: npm install
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
+          echo "STAGE=${{ github.ref_name }}" >> .env
+          cat .env
 
       - name: Set Environment Variables
         run: |
@@ -37,6 +44,9 @@ jobs:
 
       - name: Package for AWS Lambda
         run: serverless package --stage $STAGE
+
+      - name: List .serverless directory
+        run: ls -la .serverless
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
