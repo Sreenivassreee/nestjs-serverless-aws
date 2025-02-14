@@ -106,7 +106,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: deploy-package
-          path: .serverless/
+          path: serverless
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -132,7 +132,7 @@ jobs:
           fi
 
       - name: Deploy to AWS Lambda
-        run: serverless deploy --stage $STAGE --package .serverless/
+        run: serverless deploy --stage $STAGE --package serverless
       
 
 
