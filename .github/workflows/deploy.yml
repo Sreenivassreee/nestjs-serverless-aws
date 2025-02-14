@@ -15,20 +15,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # - name: Set up Node.js
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 20.x
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
 
-      # - name: Install dependencies
-      #   run: npm install
+      - name: Install dependencies
+        run: npm install
 
       - name: Create .env file
         run: |
-          touch temp.txt
-          echo ${{ github.ref_name }}
-          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> temp.txt
-          cat temp.txt
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
           if [[ "${{ github.ref_name }}" == "dev" ]]; then
             echo "STAGE=dev" >> .env
