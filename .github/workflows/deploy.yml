@@ -17,23 +17,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22.7
+          node-version: 20.x # Use a stable LTS version
 
       - name: Install dependencies
         run: npm install
-
-      - name: 'Create .env file'
-        run: |
-          touch .env
-          echo ENVIRONMENT=${{secrets.ENVIRONMENT}} >> .env
-          cat .env
 
       - name: Set Environment Variables
         run: |
           echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
           echo "Using STAGE: $STAGE"
 
-      - name: Install Serverless v3
+      - name: Install Serverless Framework
         run: npm install -g serverless@3
 
       - name: Clean and Build NestJS application
@@ -42,24 +36,13 @@ jobs:
           npm run build
 
       - name: Package for AWS Lambda
-        run: sudo serverless package --package .serverless-output
-
-      - name: Force Move Package
-        run: |
-          mkdir -p .serverless-output
-          mv .serverless/* .serverless-output/ || echo "No files to move"
+        run: serverless package --stage $STAGE
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: deploy-package
-          path: .serverless-output/
-
-      - name: Check path
-        run: |
-          pwd
-          ls
-
+          path: .serverless/
 
   deploy:
     needs: build
@@ -82,22 +65,9 @@ jobs:
           aws-region: ap-south-1
 
       - name: Install Serverless Framework
-        run: npm install -g serverless
+        run: npm install -g serverless@3
 
-      - name: Set Environment Variable
-        run: |
-          if [[ "${{ github.ref_name }}" == "dev" ]]; then
-            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-          elif [[ "${{ github.ref_name }}" == "qa" ]]; then
-            echo "ENVIRONMENT=qa" >> $GITHUB_ENV
-          elif [[ "${{ github.ref_name }}" == "master" ]]; then
-            echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-          else
-            echo "Unknown branch: ${{ github.ref_name }}"
-            exit 1
-          fi
-
-      - name: Determine Deployment Stage
+      - name: Set Deployment Stage
         run: |
           if [[ "${{ github.ref_name }}" == "dev" ]]; then
             echo "STAGE=dev" >> $GITHUB_ENV
@@ -111,4 +81,4 @@ jobs:
           fi
 
       - name: Deploy to AWS Lambda
-        run: serverless deploy --stage $STAGE
+        run: serverless deploy --stage $STAGE --package .serverless/
