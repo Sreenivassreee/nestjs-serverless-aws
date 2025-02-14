@@ -27,7 +27,17 @@ jobs:
           echo ${{ github.ref_name }}
           touch .env
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
-          echo "STAGE=${{ github.ref_name }}" >> .env
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+            echo "STAGE=dev" >> .env
+          elif [[ "${{ github.ref_name }}" == "qa" ]]; then
+            echo "STAGE=qa" >> .env
+          elif [[ "${{ github.ref_name }}" == "master" ]]; then
+            echo "STAGE=prod" >>.env
+          else
+            echo "Unknown branch: ${{ github.ref_name }}"
+            exit 1
+          fi
+          # echo "STAGE=${{ github.ref_name }}" >> .env
           cat .env
 
       - name: Set Environment Variables
