@@ -25,6 +25,7 @@ jobs:
       - name: Create .env file
         run: |
           echo ${{ github.ref_name }}
+          echo ${{secrets.ENVIRONMENT}}
           touch .env
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
           if [[ "${{ github.ref_name }}" == "dev" ]]; then
