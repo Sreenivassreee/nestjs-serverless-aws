@@ -22,6 +22,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: 'Create .env file'
+        run: |
+          touch .env
+          echo ENVIRONMENT=${{secrets.ENVIRONMENT}} >> .env
+          cat .env
+
       - name: Set Environment Variables
         run: |
           echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
@@ -38,11 +44,17 @@ jobs:
       - name: Package for AWS Lambda
         run: serverless package --package .serverless-output
 
+      - name: Force Move Package
+        run: |
+          mkdir -p .serverless-output
+          mv .serverless/* .serverless-output/ || echo "No files to move"
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: deploy-package
           path: .serverless-output/
+          
       - name: Check path
         run: |
           pwd
