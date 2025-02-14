@@ -77,7 +77,7 @@ jobs:
         run: pwd
 
       - name: List .serverless directory
-        run: ls
+        run: ls -la 
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
