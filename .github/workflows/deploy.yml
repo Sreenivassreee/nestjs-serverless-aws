@@ -42,7 +42,7 @@ jobs:
           npm run build
 
       - name: Package for AWS Lambda
-        run: serverless package --package .serverless-output
+        run: sudo serverless package --package .serverless-output
 
       - name: Force Move Package
         run: |
@@ -54,7 +54,7 @@ jobs:
         with:
           name: deploy-package
           path: .serverless-output/
-          
+
       - name: Check path
         run: |
           pwd
