@@ -69,7 +69,9 @@ jobs:
           npm run build
 
       - name: Package for AWS Lambda
-        run: serverless package --stage $STAGE
+        run: |
+          echo $STAGE
+          serverless package --stage $STAGE
 
       - name: List .serverless directory
         run: ls -la .serverless
