@@ -84,6 +84,8 @@ jobs:
         with:
             name: deploy-package
             path: ${{ github.workspace }}/.serverless
+            if-no-files-found: error
+
 
   deploy:
     needs: build
