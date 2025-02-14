@@ -26,39 +26,13 @@ jobs:
       - name: Create .env file
         run: |
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
-          
-          if [[ "${{ github.ref_name }}" == "dev" ]]; then
-            echo "STAGE=dev" >> .env
-          elif [[ "${{ github.ref_name }}" == "qa" ]]; then
-            echo "STAGE=qa" >> .env
-          elif [[ "${{ github.ref_name }}" == "prod" ]]; then
-            echo "STAGE=prod" >>.env
-          else
-            echo "Unknown branch: ${{ github.ref_name }}"
-            exit 1
-          fi
-        
+          echo "STAGE==${{github.ref_name}}" >> .env
           cat .env
 
       - name: Set Environment Variables V0
         run: |
           echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
-          echo "STAGE is set to: ${{ github.ref_name }}"
-
-
-      - name: Set Environment Variables
-        run: |
-          if [[ "${{ github.ref_name }}" == "dev" ]]; then
-              echo "STAGE=dev" >> $GITHUB_ENV
-            elif [[ "${{ github.ref_name }}" == "qa" ]]; then
-              echo "STAGE=qa" >> $GITHUB_ENV
-            elif [[ "${{ github.ref_name }}" == "prod" ]]; then
-              echo "STAGE=prod" >> $GITHUB_ENV
-            else
-              echo "Unknown branch: ${{ github.ref_name }}"
-              exit 1
-            fi
-          
+          echo "STAGE is set to: ${{ github.ref_name }}"          
           echo "Using STAGE: $STAGE"
 
       - name: Install Serverless Framework
@@ -72,21 +46,12 @@ jobs:
       - name: Package for AWS Lambda
         run: |
           echo $STAGE
-          serverless package --stage dev
-
-      - name: Print working directory
-        run: pwd
-
-      - name: List .serverless directory
-        run: ls -la 
+          serverless package --stage $STAGE
 
       - name: Move to serverless
         run: |
           mv .serverless serverless 
       
-      - name: List .serverless directory v1
-        run: ls -la serverless
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -124,17 +89,8 @@ jobs:
 
       - name: Set Deployment Stage
         run: |
-          if [[ "${{ github.ref_name }}" == "dev" ]]; then
-            echo "STAGE=dev" >> $GITHUB_ENV
-          elif [[ "${{ github.ref_name }}" == "qa" ]]; then
-            echo "STAGE=qa" >> $GITHUB_ENV
-          elif [[ "${{ github.ref_name }}" == "prod" ]]; then
-            echo "STAGE=prod" >> $GITHUB_ENV
-          else
-            echo "Unknown branch: ${{ github.ref_name }}"
-            exit 1
-          fi
-          echo $STAGE
+          echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
+  
       - name: Deploy to AWS Lambda
         run: serverless deploy --stage $STAGE --package serverless
       
