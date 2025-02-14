@@ -12,11 +12,9 @@
         "name": "aws",
         "runtime": "nodejs16.x",
         "region": "ap-south-1",
-        "stage": "prod",
+        "stage": "dev",
         "versionFunctions": true,
-        "environment": {
-          "STAGE": "prod"
-        },
+        "environment": {},
         "compiledCloudFormationTemplate": {
           "AWSTemplateFormatVersion": "2010-09-09",
           "Description": "The AWS CloudFormation template for this Serverless application",
@@ -24,13 +22,13 @@
             "ApiLogGroup": {
               "Type": "AWS::Logs::LogGroup",
               "Properties": {
-                "LogGroupName": "/aws/lambda/nestjs-app-prod-api"
+                "LogGroupName": "/aws/lambda/nestjs-app-dev-api"
               }
             },
             "GetHelloLogGroup": {
               "Type": "AWS::Logs::LogGroup",
               "Properties": {
-                "LogGroupName": "/aws/lambda/nestjs-app-prod-getHello"
+                "LogGroupName": "/aws/lambda/nestjs-app-dev-getHello"
               }
             },
             "IamRoleLambdaExecution": {
@@ -59,7 +57,7 @@
                         "-",
                         [
                           "nestjs-app",
-                          "prod",
+                          "dev",
                           "lambda"
                         ]
                       ]
@@ -76,7 +74,7 @@
                           ],
                           "Resource": [
                             {
-                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-prod*:*"
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-dev*:*"
                             }
                           ]
                         },
@@ -87,7 +85,7 @@
                           ],
                           "Resource": [
                             {
-                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-prod*:*:*"
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-dev*:*:*"
                             }
                           ]
                         }
@@ -101,7 +99,7 @@
                     "-",
                     [
                       "nestjs-app",
-                      "prod",
+                      "dev",
                       {
                         "Ref": "AWS::Region"
                       },
@@ -116,17 +114,15 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-ap-south-1-a08cf12b-d0d8",
-                  "S3Key": "serverless/nestjs-app/prod/1739553734141-2025-02-14T17:22:14.141Z/nestjs-app.zip"
+                  "S3Key": "serverless/nestjs-app/dev/1739558808963-2025-02-14T18:46:48.963Z/nestjs-app.zip"
                 },
                 "Handler": "dist/main.handler",
                 "Runtime": "nodejs16.x",
-                "FunctionName": "nestjs-app-prod-api",
+                "FunctionName": "nestjs-app-dev-api",
                 "MemorySize": 1024,
                 "Timeout": 6,
                 "Environment": {
-                  "Variables": {
-                    "STAGE": "prod"
-                  }
+                  "Variables": {}
                 },
                 "Role": {
                   "Fn::GetAtt": [
@@ -144,17 +140,15 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-ap-south-1-a08cf12b-d0d8",
-                  "S3Key": "serverless/nestjs-app/prod/1739553734141-2025-02-14T17:22:14.141Z/nestjs-app.zip"
+                  "S3Key": "serverless/nestjs-app/dev/1739558808963-2025-02-14T18:46:48.963Z/nestjs-app.zip"
                 },
                 "Handler": "dist/main.handler",
                 "Runtime": "nodejs16.x",
-                "FunctionName": "nestjs-app-prod-getHello",
+                "FunctionName": "nestjs-app-dev-getHello",
                 "MemorySize": 1024,
                 "Timeout": 6,
                 "Environment": {
-                  "Variables": {
-                    "STAGE": "prod"
-                  }
+                  "Variables": {}
                 },
                 "Role": {
                   "Fn::GetAtt": [
@@ -167,7 +161,7 @@
                 "GetHelloLogGroup"
               ]
             },
-            "ApiLambdaVersiongqrwYovkVQCAE5XqDu7y4XaPLqQAKLoXrmse6iRi8": {
+            "ApiLambdaVersionQLxoQqWy13XYxpuwyRmzddan0JiEb8HAtEhBbYF0t8": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
@@ -177,7 +171,7 @@
                 "CodeSha256": "EwRkDK1xDnwsug8I0CpHihJOxUij44D8/tJENcT1AHM="
               }
             },
-            "GetHelloLambdaVersionoDk2KNyWyXhDHukD8UrXCbkII9Gcn5mSDKliDLQSF6A": {
+            "GetHelloLambdaVersionrz9Gq290ENjvF0SHm3uDouUbW6tsjZEhQaAk24ts": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
@@ -190,7 +184,7 @@
             "ApiGatewayRestApi": {
               "Type": "AWS::ApiGateway::RestApi",
               "Properties": {
-                "Name": "prod-nestjs-app",
+                "Name": "dev-nestjs-app",
                 "EndpointConfiguration": {
                   "Types": [
                     "EDGE"
@@ -309,13 +303,13 @@
                 "GetHelloLambdaPermissionApiGateway"
               ]
             },
-            "ApiGatewayDeployment1739553720938": {
+            "ApiGatewayDeployment1739558793105": {
               "Type": "AWS::ApiGateway::Deployment",
               "Properties": {
                 "RestApiId": {
                   "Ref": "ApiGatewayRestApi"
                 },
-                "StageName": "prod"
+                "StageName": "dev"
               },
               "DependsOn": [
                 "ApiGatewayMethodGet",
@@ -401,25 +395,25 @@
             "ServerlessDeploymentBucketName": {
               "Value": "serverless-framework-deployments-ap-south-1-a08cf12b-d0d8",
               "Export": {
-                "Name": "sls-nestjs-app-prod-ServerlessDeploymentBucketName"
+                "Name": "sls-nestjs-app-dev-ServerlessDeploymentBucketName"
               }
             },
             "ApiLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "ApiLambdaVersiongqrwYovkVQCAE5XqDu7y4XaPLqQAKLoXrmse6iRi8"
+                "Ref": "ApiLambdaVersionQLxoQqWy13XYxpuwyRmzddan0JiEb8HAtEhBbYF0t8"
               },
               "Export": {
-                "Name": "sls-nestjs-app-prod-ApiLambdaFunctionQualifiedArn"
+                "Name": "sls-nestjs-app-dev-ApiLambdaFunctionQualifiedArn"
               }
             },
             "GetHelloLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "GetHelloLambdaVersionoDk2KNyWyXhDHukD8UrXCbkII9Gcn5mSDKliDLQSF6A"
+                "Ref": "GetHelloLambdaVersionrz9Gq290ENjvF0SHm3uDouUbW6tsjZEhQaAk24ts"
               },
               "Export": {
-                "Name": "sls-nestjs-app-prod-GetHelloLambdaFunctionQualifiedArn"
+                "Name": "sls-nestjs-app-dev-GetHelloLambdaFunctionQualifiedArn"
               }
             },
             "ServiceEndpoint": {
@@ -440,12 +434,12 @@
                     {
                       "Ref": "AWS::URLSuffix"
                     },
-                    "/prod"
+                    "/dev"
                   ]
                 ]
               },
               "Export": {
-                "Name": "sls-nestjs-app-prod-ServiceEndpoint"
+                "Name": "sls-nestjs-app-dev-ServiceEndpoint"
               }
             }
           }
@@ -464,13 +458,13 @@
               }
             }
           ],
-          "name": "nestjs-app-prod-api",
+          "name": "nestjs-app-dev-api",
           "package": {},
           "memory": 1024,
           "timeout": 6,
           "runtime": "nodejs16.x",
           "vpc": {},
-          "versionLogicalId": "ApiLambdaVersiongqrwYovkVQCAE5XqDu7y4XaPLqQAKLoXrmse6iRi8"
+          "versionLogicalId": "ApiLambdaVersionQLxoQqWy13XYxpuwyRmzddan0JiEb8HAtEhBbYF0t8"
         },
         "getHello": {
           "handler": "dist/main.handler",
@@ -483,13 +477,13 @@
               }
             }
           ],
-          "name": "nestjs-app-prod-getHello",
+          "name": "nestjs-app-dev-getHello",
           "package": {},
           "memory": 1024,
           "timeout": 6,
           "runtime": "nodejs16.x",
           "vpc": {},
-          "versionLogicalId": "GetHelloLambdaVersionoDk2KNyWyXhDHukD8UrXCbkII9Gcn5mSDKliDLQSF6A"
+          "versionLogicalId": "GetHelloLambdaVersionrz9Gq290ENjvF0SHm3uDouUbW6tsjZEhQaAk24ts"
         }
       },
       "package": {
@@ -500,10 +494,10 @@
         "exclude": [
           "**"
         ],
-        "artifactsS3KeyDirname": "serverless/nestjs-app/prod/code-artifacts",
+        "artifactsS3KeyDirname": "serverless/nestjs-app/dev/code-artifacts",
         "deploymentBucket": "serverless-framework-deployments-ap-south-1-a08cf12b-d0d8",
         "artifact": "/Users/sreenivask/aws/lazy-ap-lambas/.serverless/nestjs-app.zip",
-        "artifactDirectoryName": "serverless/nestjs-app/prod/1739553734141-2025-02-14T17:22:14.141Z"
+        "artifactDirectoryName": "serverless/nestjs-app/dev/1739558808963-2025-02-14T18:46:48.963Z"
       },
       "custom": {
         "esbuild": {
@@ -518,11 +512,9 @@
       "name": "aws",
       "runtime": "nodejs16.x",
       "region": "ap-south-1",
-      "stage": "prod",
+      "stage": "dev",
       "versionFunctions": true,
-      "environment": {
-        "STAGE": "prod"
-      },
+      "environment": {},
       "compiledCloudFormationTemplate": {
         "AWSTemplateFormatVersion": "2010-09-09",
         "Description": "The AWS CloudFormation template for this Serverless application",
@@ -530,13 +522,13 @@
           "ApiLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/nestjs-app-prod-api"
+              "LogGroupName": "/aws/lambda/nestjs-app-dev-api"
             }
           },
           "GetHelloLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/nestjs-app-prod-getHello"
+              "LogGroupName": "/aws/lambda/nestjs-app-dev-getHello"
             }
           },
           "IamRoleLambdaExecution": {
@@ -565,7 +557,7 @@
                       "-",
                       [
                         "nestjs-app",
-                        "prod",
+                        "dev",
                         "lambda"
                       ]
                     ]
@@ -582,7 +574,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-prod*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-dev*:*"
                           }
                         ]
                       },
@@ -593,7 +585,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-prod*:*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-dev*:*:*"
                           }
                         ]
                       }
@@ -607,7 +599,7 @@
                   "-",
                   [
                     "nestjs-app",
-                    "prod",
+                    "dev",
                     {
                       "Ref": "AWS::Region"
                     },
@@ -622,17 +614,15 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-ap-south-1-a08cf12b-d0d8",
-                "S3Key": "serverless/nestjs-app/prod/1739553734141-2025-02-14T17:22:14.141Z/nestjs-app.zip"
+                "S3Key": "serverless/nestjs-app/dev/1739558808963-2025-02-14T18:46:48.963Z/nestjs-app.zip"
               },
               "Handler": "dist/main.handler",
               "Runtime": "nodejs16.x",
-              "FunctionName": "nestjs-app-prod-api",
+              "FunctionName": "nestjs-app-dev-api",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
-                "Variables": {
-                  "STAGE": "prod"
-                }
+                "Variables": {}
               },
               "Role": {
                 "Fn::GetAtt": [
@@ -650,17 +640,15 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-ap-south-1-a08cf12b-d0d8",
-                "S3Key": "serverless/nestjs-app/prod/1739553734141-2025-02-14T17:22:14.141Z/nestjs-app.zip"
+                "S3Key": "serverless/nestjs-app/dev/1739558808963-2025-02-14T18:46:48.963Z/nestjs-app.zip"
               },
               "Handler": "dist/main.handler",
               "Runtime": "nodejs16.x",
-              "FunctionName": "nestjs-app-prod-getHello",
+              "FunctionName": "nestjs-app-dev-getHello",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
-                "Variables": {
-                  "STAGE": "prod"
-                }
+                "Variables": {}
               },
               "Role": {
                 "Fn::GetAtt": [
@@ -673,7 +661,7 @@
               "GetHelloLogGroup"
             ]
           },
-          "ApiLambdaVersiongqrwYovkVQCAE5XqDu7y4XaPLqQAKLoXrmse6iRi8": {
+          "ApiLambdaVersionQLxoQqWy13XYxpuwyRmzddan0JiEb8HAtEhBbYF0t8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
@@ -683,7 +671,7 @@
               "CodeSha256": "EwRkDK1xDnwsug8I0CpHihJOxUij44D8/tJENcT1AHM="
             }
           },
-          "GetHelloLambdaVersionoDk2KNyWyXhDHukD8UrXCbkII9Gcn5mSDKliDLQSF6A": {
+          "GetHelloLambdaVersionrz9Gq290ENjvF0SHm3uDouUbW6tsjZEhQaAk24ts": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
@@ -696,7 +684,7 @@
           "ApiGatewayRestApi": {
             "Type": "AWS::ApiGateway::RestApi",
             "Properties": {
-              "Name": "prod-nestjs-app",
+              "Name": "dev-nestjs-app",
               "EndpointConfiguration": {
                 "Types": [
                   "EDGE"
@@ -815,13 +803,13 @@
               "GetHelloLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1739553720938": {
+          "ApiGatewayDeployment1739558793105": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               },
-              "StageName": "prod"
+              "StageName": "dev"
             },
             "DependsOn": [
               "ApiGatewayMethodGet",
@@ -907,25 +895,25 @@
           "ServerlessDeploymentBucketName": {
             "Value": "serverless-framework-deployments-ap-south-1-a08cf12b-d0d8",
             "Export": {
-              "Name": "sls-nestjs-app-prod-ServerlessDeploymentBucketName"
+              "Name": "sls-nestjs-app-dev-ServerlessDeploymentBucketName"
             }
           },
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersiongqrwYovkVQCAE5XqDu7y4XaPLqQAKLoXrmse6iRi8"
+              "Ref": "ApiLambdaVersionQLxoQqWy13XYxpuwyRmzddan0JiEb8HAtEhBbYF0t8"
             },
             "Export": {
-              "Name": "sls-nestjs-app-prod-ApiLambdaFunctionQualifiedArn"
+              "Name": "sls-nestjs-app-dev-ApiLambdaFunctionQualifiedArn"
             }
           },
           "GetHelloLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetHelloLambdaVersionoDk2KNyWyXhDHukD8UrXCbkII9Gcn5mSDKliDLQSF6A"
+              "Ref": "GetHelloLambdaVersionrz9Gq290ENjvF0SHm3uDouUbW6tsjZEhQaAk24ts"
             },
             "Export": {
-              "Name": "sls-nestjs-app-prod-GetHelloLambdaFunctionQualifiedArn"
+              "Name": "sls-nestjs-app-dev-GetHelloLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -946,12 +934,12 @@
                   {
                     "Ref": "AWS::URLSuffix"
                   },
-                  "/prod"
+                  "/dev"
                 ]
               ]
             },
             "Export": {
-              "Name": "sls-nestjs-app-prod-ServiceEndpoint"
+              "Name": "sls-nestjs-app-dev-ServiceEndpoint"
             }
           }
         }
@@ -967,46 +955,46 @@
       "serviceProvider": null,
       "instanceParameters": null
     },
-    "serviceRawFile": "service: nestjs-app\n\n\nplugins:\n  - serverless-dotenv-plugin\n  \nprovider:\n  name: aws\n  runtime: nodejs16.x\n  region: ap-south-1\n  stage:  ${env:STAGE}\n\nfunctions:\n  api:\n    handler: dist/main.handler\n    events:\n      - http:\n          path: /\n          method: GET\n  getHello:\n    handler: dist/main.handler\n    events:\n      - http:\n          path: /getHello\n          method: GET\n\npackage:\n  include:\n    - dist/**\n    - node_modules/**\n  exclude:\n    - '**'\n\ncustom:\n  esbuild:\n    bundle: true\n    minify: true\n    target: node16\n    sourcemap: true\n",
+    "serviceRawFile": "service: nestjs-app\n\n\nplugins:\n  - serverless-dotenv-plugin\n  \nprovider:\n  name: aws\n  runtime: nodejs16.x\n  region: ap-south-1\n  stage: ${env:ENVIRONMENT, 'dev'}  \n\nfunctions:\n  api:\n    handler: dist/main.handler\n    events:\n      - http:\n          path: /\n          method: GET\n  getHello:\n    handler: dist/main.handler\n    events:\n      - http:\n          path: /getHello\n          method: GET\n\npackage:\n  include:\n    - dist/**\n    - node_modules/**\n  exclude:\n    - '**'\n\ncustom:\n  esbuild:\n    bundle: true\n    minify: true\n    target: node16\n    sourcemap: true\n",
     "command": [
-      "deploy"
+      "package"
     ],
     "options": {
-      "stage": "prod"
+      "package": ".serverless-output"
     },
     "orgId": "d3384026-de83-4da9-a8fe-8c7bb0a3c523",
     "orgName": "stevebrains",
     "userId": "Q80Y7TCzbT3lXDhGjn",
     "userName": "stevebrains",
     "serviceProviderAwsAccountId": "001779278644",
-    "serviceProviderAwsCfStackName": "nestjs-app-prod",
-    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:ap-south-1:001779278644:stack/nestjs-app-prod/4b06f1b0-eaf8-11ef-a8cc-0237420bea5b",
-    "serviceProviderAwsCfStackCreated": "2025-02-14T17:22:40.414Z",
+    "serviceProviderAwsCfStackName": "nestjs-app-dev",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:ap-south-1:001779278644:stack/nestjs-app-dev/5e396990-eaf6-11ef-9ad2-02904884c033",
+    "serviceProviderAwsCfStackCreated": "2025-02-14T17:08:53.647Z",
     "serviceProviderAwsCfStackUpdated": null,
     "serviceProviderAwsCfStackStatus": "CREATE_COMPLETE",
     "serviceProviderAwsCfStackOutputs": [
       {
         "OutputKey": "ApiLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:ap-south-1:001779278644:function:nestjs-app-prod-api:3",
+        "OutputValue": "arn:aws:lambda:ap-south-1:001779278644:function:nestjs-app-dev-api:13",
         "Description": "Current Lambda function version",
-        "ExportName": "sls-nestjs-app-prod-ApiLambdaFunctionQualifiedArn"
+        "ExportName": "sls-nestjs-app-dev-ApiLambdaFunctionQualifiedArn"
       },
       {
         "OutputKey": "GetHelloLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:ap-south-1:001779278644:function:nestjs-app-prod-getHello:3",
+        "OutputValue": "arn:aws:lambda:ap-south-1:001779278644:function:nestjs-app-dev-getHello:6",
         "Description": "Current Lambda function version",
-        "ExportName": "sls-nestjs-app-prod-GetHelloLambdaFunctionQualifiedArn"
+        "ExportName": "sls-nestjs-app-dev-GetHelloLambdaFunctionQualifiedArn"
       },
       {
         "OutputKey": "ServiceEndpoint",
-        "OutputValue": "https://7t9zel2u3h.execute-api.ap-south-1.amazonaws.com/prod",
+        "OutputValue": "https://wzpn288fg8.execute-api.ap-south-1.amazonaws.com/dev",
         "Description": "URL of the service endpoint",
-        "ExportName": "sls-nestjs-app-prod-ServiceEndpoint"
+        "ExportName": "sls-nestjs-app-dev-ServiceEndpoint"
       },
       {
         "OutputKey": "ServerlessDeploymentBucketName",
         "OutputValue": "serverless-framework-deployments-ap-south-1-a08cf12b-d0d8",
-        "ExportName": "sls-nestjs-app-prod-ServerlessDeploymentBucketName"
+        "ExportName": "sls-nestjs-app-dev-ServerlessDeploymentBucketName"
       }
     ],
     "compiledCloudFormationTemplate": {
@@ -1016,13 +1004,13 @@
         "ApiLogGroup": {
           "Type": "AWS::Logs::LogGroup",
           "Properties": {
-            "LogGroupName": "/aws/lambda/nestjs-app-prod-api"
+            "LogGroupName": "/aws/lambda/nestjs-app-dev-api"
           }
         },
         "GetHelloLogGroup": {
           "Type": "AWS::Logs::LogGroup",
           "Properties": {
-            "LogGroupName": "/aws/lambda/nestjs-app-prod-getHello"
+            "LogGroupName": "/aws/lambda/nestjs-app-dev-getHello"
           }
         },
         "IamRoleLambdaExecution": {
@@ -1051,7 +1039,7 @@
                     "-",
                     [
                       "nestjs-app",
-                      "prod",
+                      "dev",
                       "lambda"
                     ]
                   ]
@@ -1068,7 +1056,7 @@
                       ],
                       "Resource": [
                         {
-                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-prod*:*"
+                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-dev*:*"
                         }
                       ]
                     },
@@ -1079,7 +1067,7 @@
                       ],
                       "Resource": [
                         {
-                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-prod*:*:*"
+                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nestjs-app-dev*:*:*"
                         }
                       ]
                     }
@@ -1093,7 +1081,7 @@
                 "-",
                 [
                   "nestjs-app",
-                  "prod",
+                  "dev",
                   {
                     "Ref": "AWS::Region"
                   },
@@ -1108,17 +1096,15 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-ap-south-1-a08cf12b-d0d8",
-              "S3Key": "serverless/nestjs-app/prod/1739553734141-2025-02-14T17:22:14.141Z/nestjs-app.zip"
+              "S3Key": "serverless/nestjs-app/dev/1739558808963-2025-02-14T18:46:48.963Z/nestjs-app.zip"
             },
             "Handler": "dist/main.handler",
             "Runtime": "nodejs16.x",
-            "FunctionName": "nestjs-app-prod-api",
+            "FunctionName": "nestjs-app-dev-api",
             "MemorySize": 1024,
             "Timeout": 6,
             "Environment": {
-              "Variables": {
-                "STAGE": "prod"
-              }
+              "Variables": {}
             },
             "Role": {
               "Fn::GetAtt": [
@@ -1136,17 +1122,15 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-ap-south-1-a08cf12b-d0d8",
-              "S3Key": "serverless/nestjs-app/prod/1739553734141-2025-02-14T17:22:14.141Z/nestjs-app.zip"
+              "S3Key": "serverless/nestjs-app/dev/1739558808963-2025-02-14T18:46:48.963Z/nestjs-app.zip"
             },
             "Handler": "dist/main.handler",
             "Runtime": "nodejs16.x",
-            "FunctionName": "nestjs-app-prod-getHello",
+            "FunctionName": "nestjs-app-dev-getHello",
             "MemorySize": 1024,
             "Timeout": 6,
             "Environment": {
-              "Variables": {
-                "STAGE": "prod"
-              }
+              "Variables": {}
             },
             "Role": {
               "Fn::GetAtt": [
@@ -1159,7 +1143,7 @@
             "GetHelloLogGroup"
           ]
         },
-        "ApiLambdaVersiongqrwYovkVQCAE5XqDu7y4XaPLqQAKLoXrmse6iRi8": {
+        "ApiLambdaVersionQLxoQqWy13XYxpuwyRmzddan0JiEb8HAtEhBbYF0t8": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
@@ -1169,7 +1153,7 @@
             "CodeSha256": "EwRkDK1xDnwsug8I0CpHihJOxUij44D8/tJENcT1AHM="
           }
         },
-        "GetHelloLambdaVersionoDk2KNyWyXhDHukD8UrXCbkII9Gcn5mSDKliDLQSF6A": {
+        "GetHelloLambdaVersionrz9Gq290ENjvF0SHm3uDouUbW6tsjZEhQaAk24ts": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
@@ -1182,7 +1166,7 @@
         "ApiGatewayRestApi": {
           "Type": "AWS::ApiGateway::RestApi",
           "Properties": {
-            "Name": "prod-nestjs-app",
+            "Name": "dev-nestjs-app",
             "EndpointConfiguration": {
               "Types": [
                 "EDGE"
@@ -1301,13 +1285,13 @@
             "GetHelloLambdaPermissionApiGateway"
           ]
         },
-        "ApiGatewayDeployment1739553720938": {
+        "ApiGatewayDeployment1739558793105": {
           "Type": "AWS::ApiGateway::Deployment",
           "Properties": {
             "RestApiId": {
               "Ref": "ApiGatewayRestApi"
             },
-            "StageName": "prod"
+            "StageName": "dev"
           },
           "DependsOn": [
             "ApiGatewayMethodGet",
@@ -1393,25 +1377,25 @@
         "ServerlessDeploymentBucketName": {
           "Value": "serverless-framework-deployments-ap-south-1-a08cf12b-d0d8",
           "Export": {
-            "Name": "sls-nestjs-app-prod-ServerlessDeploymentBucketName"
+            "Name": "sls-nestjs-app-dev-ServerlessDeploymentBucketName"
           }
         },
         "ApiLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "ApiLambdaVersiongqrwYovkVQCAE5XqDu7y4XaPLqQAKLoXrmse6iRi8"
+            "Ref": "ApiLambdaVersionQLxoQqWy13XYxpuwyRmzddan0JiEb8HAtEhBbYF0t8"
           },
           "Export": {
-            "Name": "sls-nestjs-app-prod-ApiLambdaFunctionQualifiedArn"
+            "Name": "sls-nestjs-app-dev-ApiLambdaFunctionQualifiedArn"
           }
         },
         "GetHelloLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "GetHelloLambdaVersionoDk2KNyWyXhDHukD8UrXCbkII9Gcn5mSDKliDLQSF6A"
+            "Ref": "GetHelloLambdaVersionrz9Gq290ENjvF0SHm3uDouUbW6tsjZEhQaAk24ts"
           },
           "Export": {
-            "Name": "sls-nestjs-app-prod-GetHelloLambdaFunctionQualifiedArn"
+            "Name": "sls-nestjs-app-dev-GetHelloLambdaFunctionQualifiedArn"
           }
         },
         "ServiceEndpoint": {
@@ -1432,12 +1416,12 @@
                 {
                   "Ref": "AWS::URLSuffix"
                 },
-                "/prod"
+                "/dev"
               ]
             ]
           },
           "Export": {
-            "Name": "sls-nestjs-app-prod-ServiceEndpoint"
+            "Name": "sls-nestjs-app-dev-ServiceEndpoint"
           }
         }
       }

@@ -43,6 +43,11 @@ jobs:
         with:
           name: deploy-package
           path: .serverless-output/
+      - name: Check path
+        run: |
+          pwd
+          ls
+
 
   deploy:
     needs: build
