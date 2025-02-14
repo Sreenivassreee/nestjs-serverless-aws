@@ -41,8 +41,18 @@ jobs:
           cat .env
 
       - name: Set Environment Variables
-        run: |
-          echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
+          run: |
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+              echo "STAGE=dev" >> $GITHUB_ENV
+            elif [[ "${{ github.ref_name }}" == "qa" ]]; then
+              echo "STAGE=qa" >> $GITHUB_ENV
+            elif [[ "${{ github.ref_name }}" == "master" ]]; then
+              echo "STAGE=prod" >> $GITHUB_ENV
+            else
+              echo "Unknown branch: ${{ github.ref_name }}"
+              exit 1
+            fi
+          
           echo "Using STAGE: $STAGE"
 
       - name: Install Serverless Framework
