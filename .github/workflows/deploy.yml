@@ -22,6 +22,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: 'Create env file'
+        run: |
+          touch .env.dev
+          echo API_ENDPOINT=${{secrets.ENVIRONMENT}} >> .env
+          cat .env.dev
+
       - name: Install Serverless Framework
         run: npm install -g serverless
 
