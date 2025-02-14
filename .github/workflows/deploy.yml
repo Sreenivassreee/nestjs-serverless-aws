@@ -40,6 +40,12 @@ jobs:
           # echo "STAGE=${{ github.ref_name }}" >> .env
           cat .env
 
+      - name: Set Environment Variables V0
+        run: |
+          echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
+          echo "STAGE is set to: ${{ github.ref_name }}"
+
+
       - name: Set Environment Variables
         run: |
           if [[ "${{ github.ref_name }}" == "dev" ]]; then
