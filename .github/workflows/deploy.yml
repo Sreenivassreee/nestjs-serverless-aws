@@ -41,7 +41,7 @@ jobs:
           cat .env
 
       - name: Set Environment Variables
-          run: |
+        run: |
           if [[ "${{ github.ref_name }}" == "dev" ]]; then
               echo "STAGE=dev" >> $GITHUB_ENV
             elif [[ "${{ github.ref_name }}" == "qa" ]]; then
