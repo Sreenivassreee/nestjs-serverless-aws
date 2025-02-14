@@ -28,9 +28,10 @@ jobs:
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
           echo "STAGE==${{github.ref_name}}" >> .env
           cat .env
-
-      - name: Set Environment Variables V0
+        
+      - name: Set Environment Variables
         run: |
+          echo "ENVIRONMENT=prod" >> $GITHUB_ENV
           echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
           echo "STAGE is set to: ${{ github.ref_name }}"          
           echo "Using STAGE: $STAGE"
@@ -90,9 +91,12 @@ jobs:
       - name: Set Deployment Stage
         run: |
           echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
+          echo $STAGE
   
       - name: Deploy to AWS Lambda
-        run: serverless deploy --stage $STAGE --package serverless
+        run: |
+          echo $STAGE
+          serverless deploy --stage $STAGE --package serverless
       
 
 
