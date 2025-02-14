@@ -5,7 +5,7 @@ on:
     branches:
       - dev
       - qa
-      - main
+      - master
 
 jobs:
   build:
