@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - dev
-      - master
       - qa
+      - main
 
 jobs:
   build:
@@ -22,11 +22,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: 'Create env file'
+      - name: Set Environment Variables
         run: |
-          touch .env.dev
-          echo ENVIRONMENT=${{secrets.ENVIRONMENT}} >> .env
-          cat .env.dev
+          echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
+          echo "Using STAGE: $STAGE"
 
       - name: Install Serverless Framework
         run: npm install -g serverless
@@ -34,14 +33,14 @@ jobs:
       - name: Build NestJS application
         run: npm run build
 
-      # - name: Package for AWS Lambda
-      #   run: serverless package
+      - name: Package for AWS Lambda
+        run: serverless package
 
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: deploy-package
-      #     path: .serverless/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-package
+          path: .serverless/
 
   deploy:
     needs: build
@@ -66,20 +65,18 @@ jobs:
       - name: Install Serverless Framework
         run: npm install -g serverless
 
-      - name: Deploy to AWS Lambda (Dev)
-        if: github.ref == 'refs/heads/dev'
-        env:
-          STAGE: ${{ secrets.ENVIRONMENT }}
-        run: serverless deploy --stage dev
+      - name: Determine Deployment Stage
+        run: |
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+            echo "STAGE=dev" >> $GITHUB_ENV
+          elif [[ "${{ github.ref_name }}" == "qa" ]]; then
+            echo "STAGE=qa" >> $GITHUB_ENV
+          elif [[ "${{ github.ref_name }}" == "main" ]]; then
+            echo "STAGE=prod" >> $GITHUB_ENV
+          else
+            echo "Unknown branch: ${{ github.ref_name }}"
+            exit 1
+          fi
 
-      - name: Deploy to AWS Lambda (Qa)
-        if: github.ref == 'refs/heads/main'
-        env:
-          STAGE: ${{ secrets.ENVIRONMENT }}
-        run: serverless deploy --stage qa
-
-      - name: Deploy to AWS Lambda (Production)
-        if: github.ref == 'refs/heads/main'
-        env:
-          STAGE: ${{ secrets.ENVIRONMENT }}
-        run: serverless deploy --stage prod
+      - name: Deploy to AWS Lambda
+        run: serverless deploy --stage $STAGE
