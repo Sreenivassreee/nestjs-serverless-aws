@@ -34,14 +34,14 @@ jobs:
       - name: Build NestJS application
         run: npm run build
 
-      - name: Package for AWS Lambda
-        run: serverless package
+      # - name: Package for AWS Lambda
+      #   run: serverless package
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: deploy-package
-          path: .serverless/
+      # - name: Upload artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: deploy-package
+      #     path: .serverless/
 
   deploy:
     needs: build
