@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -24,8 +25,6 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo ${{ github.ref_name }}
-          touch .env
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
           if [[ "${{ github.ref_name }}" == "dev" ]]; then
             echo "STAGE=dev" >> .env
@@ -37,7 +36,7 @@ jobs:
             echo "Unknown branch: ${{ github.ref_name }}"
             exit 1
           fi
-          # echo "STAGE=${{ github.ref_name }}" >> .env
+        
           cat .env
 
       - name: Set Environment Variables V0
@@ -70,16 +69,31 @@ jobs:
           npm run build
 
       - name: Package for AWS Lambda
-        run: serverless package --stage $STAGE
+        run: |
+          echo $STAGE
+          serverless package --stage dev
+
+      - name: Print working directory
+        run: pwd
 
       - name: List .serverless directory
-        run: ls -la .serverless
+        run: ls -la 
+
+      - name: Move to serverless
+        run: |
+          mv .serverless serverless 
+      
+      - name: List .serverless directory v1
+        run: ls -la serverless
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: deploy-package
-          path: .serverless/
+            name: deploy-package
+            path: ${{ github.workspace }}/serverless
+            if-no-files-found: error
+            include-hidden-files: true
+
 
   deploy:
     needs: build
@@ -92,7 +106,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: deploy-package
-          path: .serverless/
+          path: serverless
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -103,6 +117,9 @@ jobs:
 
       - name: Install Serverless Framework
         run: npm install -g serverless@3
+        
+      - name: Install serverless-dotenv-plugin
+        run: npm install serverless-dotenv-plugin --save-dev
 
       - name: Set Deployment Stage
         run: |
@@ -116,6 +133,10 @@ jobs:
             echo "Unknown branch: ${{ github.ref_name }}"
             exit 1
           fi
-
+          echo $STAGE
       - name: Deploy to AWS Lambda
-        run: serverless deploy --stage $STAGE --package .serverless/
+        run: serverless deploy --stage $STAGE --package serverless
+      
+
+
+      
