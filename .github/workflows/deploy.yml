@@ -25,7 +25,7 @@ jobs:
       - name: 'Create env file'
         run: |
           touch .env.dev
-          echo API_ENDPOINT=${{secrets.ENVIRONMENT}} >> .env
+          echo ENVIRONMENT=${{secrets.ENVIRONMENT}} >> .env
           cat .env.dev
 
       - name: Install Serverless Framework
@@ -68,12 +68,18 @@ jobs:
 
       - name: Deploy to AWS Lambda (Dev)
         if: github.ref == 'refs/heads/dev'
+        env:
+          STAGE: ${{ secrets.ENVIRONMENT }}
         run: serverless deploy --stage dev
 
       - name: Deploy to AWS Lambda (Qa)
         if: github.ref == 'refs/heads/main'
+        env:
+          STAGE: ${{ secrets.ENVIRONMENT }}
         run: serverless deploy --stage qa
 
       - name: Deploy to AWS Lambda (Production)
         if: github.ref == 'refs/heads/main'
+        env:
+          STAGE: ${{ secrets.ENVIRONMENT }}
         run: serverless deploy --stage prod
