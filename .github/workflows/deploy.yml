@@ -27,8 +27,8 @@ jobs:
           echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
           echo "Using STAGE: $STAGE"
 
-      - name: Install Serverless Framework
-        run: npm install -g serverless
+      - name: Install Serverless v3
+        run: npm install -g serverless@3
 
       - name: Build NestJS application
         run: npm run build
