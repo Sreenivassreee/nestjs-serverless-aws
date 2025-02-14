@@ -27,7 +27,7 @@ jobs:
           touch temp.txt
           echo ${{ github.ref_name }}
           echo ${{secrets}} >> temp.txt
-          touch temp.txt
+          cat temp.txt
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
           if [[ "${{ github.ref_name }}" == "dev" ]]; then
             echo "STAGE=dev" >> .env
