@@ -26,7 +26,7 @@ jobs:
         run: |
           touch temp.txt
           echo ${{ github.ref_name }}
-          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> temp.txt
+          echo "ENVIRONMENT=${{ secrets.AWS_ACCESS_KEY_ID }}" >> temp.txt
           cat temp.txt
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
           if [[ "${{ github.ref_name }}" == "dev" ]]; then
