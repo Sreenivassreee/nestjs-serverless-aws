@@ -10,7 +10,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name }}
+    environment: |
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+            echo "STAGE=dev" >> $GITHUB_ENV
+          elif [[ "${{ github.ref_name }}" == "qa" ]]; then
+            echo "STAGE=qa" >> $GITHUB_ENV
+          elif [[ "${{ github.ref_name }}" == "master" ]]; then
+            echo "STAGE=prod" >> $GITHUB_ENV
+          else
+            echo "Unknown branch: ${{ github.ref_name }}"
+            exit 1
+          fi
+    # ${{ github.ref_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
