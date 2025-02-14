@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -26,7 +27,7 @@ jobs:
         run: |
           touch temp.txt
           echo ${{ github.ref_name }}
-          echo "ENVIRONMENT=${{ secrets.AWS_ACCESS_KEY_ID }}" >> temp.txt
+          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> temp.txt
           cat temp.txt
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
           if [[ "${{ github.ref_name }}" == "dev" ]]; then
