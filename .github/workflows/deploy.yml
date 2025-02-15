@@ -8,7 +8,7 @@ on:
       - prod
 
 jobs:
-  build:
+  Build:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }}
     steps:
