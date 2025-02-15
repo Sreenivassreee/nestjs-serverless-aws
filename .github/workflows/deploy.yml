@@ -28,7 +28,8 @@ jobs:
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
           echo "STAGE==${{github.ref_name}}" >> .env
           cat .env
-        
+  deploy:
+    steps:
       - name: Set Environment Variables
         run: |
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> $GITHUB_ENV
@@ -45,19 +46,6 @@ jobs:
           rm -rf dist
           npm run build
 
-      # - name: Debug stack name
-      #   run: |
-      #     echo "Stack name: nestjs-app-${{ github.ref_name }}"
-
-      # - name: Package for AWS Lambda
-      #   run: |
-      #     echo ${{ github.ref_name }}
-      #     serverless package --stage ${{ github.ref_name }}
-
-      # - name: Move to serverless
-      #   run: |
-      #     mv .serverless serverless 
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -65,62 +53,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      # - name: Set Deployment Stage
-      #   run: |
-      #     echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
-      #     echo $STAGE
-  
       - name: Deploy to AWS Lambda
         run: |
           echo $ENVIRONMENT
           serverless deploy --stage $ENVIRONMENT
       
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #       name: deploy-package
-      #       path: ${{ github.workspace }}/serverless
-      #       if-no-files-found: error
-      #       include-hidden-files: true
-
-
-  # deploy:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-
-  #     - name: Download artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: deploy-package
-  #         path: serverless
-
-  #     - name: Configure AWS Credentials
-  #       uses: aws-actions/configure-aws-credentials@v2
-  #       with:
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: ap-south-1
-
-  #     - name: Install Serverless Framework
-  #       run: npm install -g serverless@3
-        
-  #     - name: Install serverless-dotenv-plugin
-  #       run: npm install serverless-dotenv-plugin --save-dev
-
-  #     - name: Set Deployment Stage
-  #       run: |
-  #         echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
-  #         echo $STAGE
-  
-  #     - name: Deploy to AWS Lambda
-  #       run: |
-  #         echo $STAGE
-  #         serverless deploy --stage $STAGE --package serverless
-      
-
-
-      
-
