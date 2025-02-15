@@ -23,13 +23,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Serverless Framework
+        run: npm install -g serverless@3
+
       - name: Create .env file
         run: |
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
           echo "STAGE==${{github.ref_name}}" >> .env
           cat .env
-  deploy:
-    steps:
+          
       - name: Set Environment Variables
         run: |
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> $GITHUB_ENV
@@ -37,9 +39,6 @@ jobs:
           echo "STAGE is set to: ${{ github.ref_name }}"          
           echo "Using STAGE: $STAGE"
           echo "Using ENVIRONMENT: $ENVIRONMENT"
-
-      - name: Install Serverless Framework
-        run: npm install -g serverless@3
 
       - name: Clean and Build NestJS application
         run: |
