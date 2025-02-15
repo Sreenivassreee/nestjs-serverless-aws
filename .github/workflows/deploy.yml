@@ -29,17 +29,15 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
           echo "STAGE==${{github.ref_name}}" >> .env
           cat .env
           
       - name: Set Environment Variables
         run: |
-          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> $GITHUB_ENV
           echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
           echo "STAGE is set to: ${{ github.ref_name }}"          
           echo "Using STAGE: $STAGE"
-          echo "Using ENVIRONMENT: $ENVIRONMENT"
+          
 
       - name: Clean and Build NestJS application
         run: |
@@ -55,8 +53,7 @@ jobs:
 
       - name: Deploy to AWS Lambda
         run: |
-          echo $ENVIRONMENT
-          serverless deploy --stage $ENVIRONMENT
+          serverless deploy --stage $STAGE
       
 
       
