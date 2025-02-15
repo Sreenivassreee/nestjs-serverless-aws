@@ -57,3 +57,5 @@ jobs:
           echo $ENVIRONMENT
           serverless deploy --stage $ENVIRONMENT
       
+
+      
