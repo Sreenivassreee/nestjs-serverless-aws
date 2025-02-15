@@ -50,8 +50,8 @@ jobs:
 
       - name: Package for AWS Lambda
         run: |
-          echo $STAGE
-          serverless package --stage $STAGE
+          echo ${{ github.ref_name }}
+          serverless package --stage ${{ github.ref_name }}
 
       - name: Move to serverless
         run: |
@@ -63,16 +63,16 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
-          
-      - name: Set Deployment Stage
-        run: |
-          echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
-          echo $STAGE
+
+      # - name: Set Deployment Stage
+      #   run: |
+      #     echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
+      #     echo $STAGE
   
       - name: Deploy to AWS Lambda
         run: |
-          echo $STAGE
-          serverless deploy --stage $STAGE --package serverless
+          echo ${{ github.ref_name }}
+          serverless deploy --stage ${{ github.ref_name }} --package serverless
       
       # - name: Upload artifact
       #   uses: actions/upload-artifact@v4
