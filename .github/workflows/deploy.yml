@@ -29,12 +29,13 @@ jobs:
           echo "STAGE==${{github.ref_name}}" >> .env
           cat .env
         
-      # - name: Set Environment Variables
-      #   run: |
-      #     echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-      #     echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
-      #     echo "STAGE is set to: ${{ github.ref_name }}"          
-      #     echo "Using STAGE: $STAGE"
+      - name: Set Environment Variables
+        run: |
+          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> $GITHUB_ENV
+          echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
+          echo "STAGE is set to: ${{ github.ref_name }}"          
+          echo "Using STAGE: $STAGE"
+          echo "Using ENVIRONMENT: $ENVIRONMENT"
 
       - name: Install Serverless Framework
         run: npm install -g serverless@3
@@ -44,18 +45,18 @@ jobs:
           rm -rf dist
           npm run build
 
-      - name: Debug stack name
-        run: |
-          echo "Stack name: nestjs-app-${{ github.ref_name }}"
+      # - name: Debug stack name
+      #   run: |
+      #     echo "Stack name: nestjs-app-${{ github.ref_name }}"
 
-      - name: Package for AWS Lambda
-        run: |
-          echo ${{ github.ref_name }}
-          serverless package --stage ${{ github.ref_name }}
+      # - name: Package for AWS Lambda
+      #   run: |
+      #     echo ${{ github.ref_name }}
+      #     serverless package --stage ${{ github.ref_name }}
 
-      - name: Move to serverless
-        run: |
-          mv .serverless serverless 
+      # - name: Move to serverless
+      #   run: |
+      #     mv .serverless serverless 
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -71,8 +72,8 @@ jobs:
   
       - name: Deploy to AWS Lambda
         run: |
-          echo ${{ github.ref_name }}
-          serverless deploy --stage ${{ github.ref_name }} --package serverless
+          echo $ENVIRONMENT
+          serverless deploy --stage $ENVIRONMENT --package serverless
       
       # - name: Upload artifact
       #   uses: actions/upload-artifact@v4
