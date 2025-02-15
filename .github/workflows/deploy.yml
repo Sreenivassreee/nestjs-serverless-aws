@@ -73,7 +73,7 @@ jobs:
       - name: Deploy to AWS Lambda
         run: |
           echo $ENVIRONMENT
-          serverless deploy --stage $ENVIRONMENT --package serverless
+          serverless deploy --stage $ENVIRONMENT
       
       # - name: Upload artifact
       #   uses: actions/upload-artifact@v4
