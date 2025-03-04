@@ -7,8 +7,9 @@ on:
       - qa
       - prod
 
+
 jobs:
-  build:
+  BuildAndDeploy:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }}
     steps:
@@ -23,91 +24,25 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Create .env file
-        run: |
-          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
-          
-          if [[ "${{ github.ref_name }}" == "dev" ]]; then
-            echo "STAGE=dev" >> .env
-          elif [[ "${{ github.ref_name }}" == "qa" ]]; then
-            echo "STAGE=qa" >> .env
-          elif [[ "${{ github.ref_name }}" == "prod" ]]; then
-            echo "STAGE=prod" >>.env
-          else
-            echo "Unknown branch: ${{ github.ref_name }}"
-            exit 1
-          fi
-        
-          cat .env
-
-      - name: Set Environment Variables V0
-        run: |
-          echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
-          echo "STAGE is set to: ${{ github.ref_name }}"
-
-
-      - name: Set Environment Variables
-        run: |
-          if [[ "${{ github.ref_name }}" == "dev" ]]; then
-              echo "STAGE=dev" >> $GITHUB_ENV
-            elif [[ "${{ github.ref_name }}" == "qa" ]]; then
-              echo "STAGE=qa" >> $GITHUB_ENV
-            elif [[ "${{ github.ref_name }}" == "prod" ]]; then
-              echo "STAGE=prod" >> $GITHUB_ENV
-            else
-              echo "Unknown branch: ${{ github.ref_name }}"
-              exit 1
-            fi
-          
-          echo "Using STAGE: $STAGE"
-
       - name: Install Serverless Framework
         run: npm install -g serverless@3
+
+      - name: Create .env file
+        run: |
+          echo "STAGE==${{github.ref_name}}" >> .env
+          cat .env
+          
+      - name: Set Environment Variables
+        run: |
+          echo "STAGE=${{ github.ref_name }}" >> $GITHUB_ENV
+          echo "STAGE is set to: ${{ github.ref_name }}"          
+          echo "Using STAGE: $STAGE"
+          
 
       - name: Clean and Build NestJS application
         run: |
           rm -rf dist
           npm run build
-
-      - name: Package for AWS Lambda
-        run: |
-          echo $STAGE
-          serverless package --stage dev
-
-      - name: Print working directory
-        run: pwd
-
-      - name: List .serverless directory
-        run: ls -la 
-
-      - name: Move to serverless
-        run: |
-          mv .serverless serverless 
-      
-      - name: List .serverless directory v1
-        run: ls -la serverless
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-            name: deploy-package
-            path: ${{ github.workspace }}/serverless
-            if-no-files-found: error
-            include-hidden-files: true
-
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: deploy-package
-          path: serverless
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -116,28 +51,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Install Serverless Framework
-        run: npm install -g serverless@3
-        
-      - name: Install serverless-dotenv-plugin
-        run: npm install serverless-dotenv-plugin --save-dev
-
-      - name: Set Deployment Stage
-        run: |
-          if [[ "${{ github.ref_name }}" == "dev" ]]; then
-            echo "STAGE=dev" >> $GITHUB_ENV
-          elif [[ "${{ github.ref_name }}" == "qa" ]]; then
-            echo "STAGE=qa" >> $GITHUB_ENV
-          elif [[ "${{ github.ref_name }}" == "prod" ]]; then
-            echo "STAGE=prod" >> $GITHUB_ENV
-          else
-            echo "Unknown branch: ${{ github.ref_name }}"
-            exit 1
-          fi
-          echo $STAGE
       - name: Deploy to AWS Lambda
-        run: serverless deploy --stage $STAGE --package serverless
+        run: |
+          serverless deploy --stage $STAGE
       
-
 
       
